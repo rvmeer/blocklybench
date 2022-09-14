@@ -10,7 +10,7 @@ html, body {
 }
 
 body {
-  background-color: #fff;
+  background-color: #000000;
   font-family: sans-serif;
   margin: 0 5px;
   overflow: hidden;
@@ -67,9 +67,8 @@ p {
   z-index: 9;
 }
 
-#preview {
-  position: absolute;
-}
+
+
 
 pre,
 #languageTA {
@@ -128,7 +127,7 @@ button, .buttonStyle {
 }
 
 #blockFactoryContent {
-  height: 85%;
+  height: 100%;
   width: 100%;
   overflow: hidden;
 }
@@ -165,9 +164,6 @@ button, .buttonStyle {
   display: none;
 }
 
-#blocklyWorkspaceContainer {
-  width: 50%;
-}
 
 #workspaceFactoryContent {
   clear: both;

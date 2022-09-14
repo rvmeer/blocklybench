@@ -1,0 +1,215 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "factory_base",
+        "id": "~[3l7X0=OTJ-:75szaug",
+        "x": 59,
+        "y": 47,
+        "extraState": "<mutation connections=\"NONE\"></mutation>",
+        "fields": {
+          "NAME": "cpd",
+          "INLINE": "AUTO",
+          "CONNECTIONS": "NONE"
+        },
+        "inputs": {
+          "INPUTS": {
+            "block": {
+              "type": "input_dummy",
+              "id": "[w9~QG:Ug)wZIn1xv}5j",
+              "fields": {
+                "ALIGN": "LEFT"
+              },
+              "inputs": {
+                "FIELDS": {
+                  "block": {
+                    "type": "field_static",
+                    "id": "l0mR(6}T#=[3gOTg~)U)",
+                    "fields": {
+                      "TEXT": "CPD"
+                    }
+                  }
+                }
+              },
+              "next": {
+                "block": {
+                  "type": "input_dummy",
+                  "id": "OKlA0aHE`g}Z,53qEUlk",
+                  "fields": {
+                    "ALIGN": "RIGHT"
+                  },
+                  "inputs": {
+                    "FIELDS": {
+                      "block": {
+                        "type": "field_static",
+                        "id": "}T2nfQQ9H~NpZyd/x80@",
+                        "fields": {
+                          "TEXT": "name"
+                        },
+                        "next": {
+                          "block": {
+                            "type": "field_input",
+                            "id": "0(!EoCz77$k`(Tnh^EH7",
+                            "fields": {
+                              "TEXT": "CCBB",
+                              "FIELDNAME": "name"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "input_dummy",
+                      "id": "ur@E]2Y(Z*n#cr*.v@cK",
+                      "fields": {
+                        "ALIGN": "RIGHT"
+                      },
+                      "inputs": {
+                        "FIELDS": {
+                          "block": {
+                            "type": "field_static",
+                            "id": ".TX26WGZ-EpwzcCEjS.!",
+                            "fields": {
+                              "TEXT": "description"
+                            },
+                            "next": {
+                              "block": {
+                                "type": "field_input",
+                                "id": "2Z|I`8?TKqrzB@F=h.PY",
+                                "fields": {
+                                  "TEXT": "description",
+                                  "FIELDNAME": "description"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "input_statement",
+                          "id": "6W~3.aCewDVwd7p?1S?#",
+                          "fields": {
+                            "INPUTNAME": "steps",
+                            "ALIGN": "LEFT"
+                          },
+                          "inputs": {
+                            "FIELDS": {
+                              "block": {
+                                "type": "field_static",
+                                "id": "}Z7uoZ|Ob!F{A6z_GMLW",
+                                "fields": {
+                                  "TEXT": "steps"
+                                }
+                              }
+                            },
+                            "TYPE": {
+                              "shadow": {
+                                "type": "type_null",
+                                "id": "hY.C%/X,TQ3of4pJxU$_"
+                              },
+                              "block": {
+                                "type": "type_group",
+                                "id": ";DobwI;t0p@y{A)X`n4I",
+                                "extraState": "<mutation types=\"1\"></mutation>",
+                                "inputs": {
+                                  "TYPE0": {
+                                    "block": {
+                                      "type": "type_other",
+                                      "id": "YIO*9^QV(At77n{kPc1D",
+                                      "fields": {
+                                        "TYPE": "step"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "input_statement",
+                              "id": "-zVt3#A6aU#6NlU1B}GK",
+                              "fields": {
+                                "INPUTNAME": "scenarios",
+                                "ALIGN": "LEFT"
+                              },
+                              "inputs": {
+                                "FIELDS": {
+                                  "block": {
+                                    "type": "field_static",
+                                    "id": "|sX#pt*)T^V8-XI^=qgo",
+                                    "fields": {
+                                      "TEXT": "scenarios"
+                                    }
+                                  }
+                                },
+                                "TYPE": {
+                                  "shadow": {
+                                    "type": "type_null",
+                                    "id": "hY.C%/X,TQ3of4pJxU$_"
+                                  },
+                                  "block": {
+                                    "type": "type_group",
+                                    "id": "FTAF(ziLFJ=:R)n#PcQm",
+                                    "extraState": "<mutation types=\"1\"></mutation>",
+                                    "inputs": {
+                                      "TYPE0": {
+                                        "block": {
+                                          "type": "type_other",
+                                          "id": "WkXrZb7d*7prmvBV9?Qk",
+                                          "fields": {
+                                            "TYPE": "scenario"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "TOOLTIP": {
+            "block": {
+              "type": "text",
+              "id": "l@#B|3p`(k;:rZQL7-te",
+              "fields": {
+                "TEXT": ""
+              }
+            }
+          },
+          "HELPURL": {
+            "block": {
+              "type": "text",
+              "id": "`?`![)@-4jRMvBi1xQdp",
+              "fields": {
+                "TEXT": ""
+              }
+            }
+          },
+          "COLOUR": {
+            "block": {
+              "type": "colour_hue",
+              "id": "i@2#O|Pj?E:yUW/%-*]K",
+              "extraState": "<mutation colour=\"#5b67a5\"></mutation>",
+              "fields": {
+                "HUE": 230
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

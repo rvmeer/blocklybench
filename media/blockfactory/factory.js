@@ -111,35 +111,37 @@ BlockFactory.formatChange = function() {
  * Update the language code based on constructs made in Blockly.
  */
 BlockFactory.updateLanguage = function() {
-  var rootBlock = FactoryUtils.getRootBlock(BlockFactory.mainWorkspace);
-  if (!rootBlock) {
-    return;
-  }
-  var blockType = rootBlock.getFieldValue('NAME').trim().toLowerCase();
-  if (!blockType) {
-    blockType = BlockFactory.UNNAMED;
-  }
+  return;
 
-  if (!BlockFactory.updateBlocksFlag) {
-    var format = document.getElementById('format').value;
-    if (format === 'Manual-JSON') {
-      format = 'JSON';
-    } else if (format === 'Manual-JS') {
-      format = 'JavaScript';
-    }
+  // var rootBlock = FactoryUtils.getRootBlock(BlockFactory.mainWorkspace);
+  // if (!rootBlock) {
+  //   return;
+  // }
+  // var blockType = rootBlock.getFieldValue('NAME').trim().toLowerCase();
+  // if (!blockType) {
+  //   blockType = BlockFactory.UNNAMED;
+  // }
 
-    var code = FactoryUtils.getBlockDefinition(blockType, rootBlock, format,
-        BlockFactory.mainWorkspace);
-    FactoryUtils.injectCode(code, 'languagePre');
-    if (!BlockFactory.updateBlocksFlagDelayed) {
-      var languagePre = document.getElementById('languagePre');
-      var languageTA = document.getElementById('languageTA');
-      code = languagePre.innerText.trim();
-      languageTA.value = code;
-    }
-  }
+  // if (!BlockFactory.updateBlocksFlag) {
+  //   var format = document.getElementById('format').value;
+  //   if (format === 'Manual-JSON') {
+  //     format = 'JSON';
+  //   } else if (format === 'Manual-JS') {
+  //     format = 'JavaScript';
+  //   }
 
-  BlockFactory.updatePreview();
+  //   var code = FactoryUtils.getBlockDefinition(blockType, rootBlock, format,
+  //       BlockFactory.mainWorkspace);
+  //   FactoryUtils.injectCode(code, 'languagePre');
+  //   if (!BlockFactory.updateBlocksFlagDelayed) {
+  //     var languagePre = document.getElementById('languagePre');
+  //     var languageTA = document.getElementById('languageTA');
+  //     code = languagePre.innerText.trim();
+  //     languageTA.value = code;
+  //   }
+  // }
+
+  // BlockFactory.updatePreview();
 };
 
 /**
@@ -157,6 +159,7 @@ BlockFactory.updateGenerator = function(block) {
  */
 BlockFactory.updatePreview = function() {
   // Toggle between LTR/RTL if needed (also used in first display).
+  debugger;
   var newDir = document.getElementById('direction').value;
   if (BlockFactory.oldDir !== newDir) {
     if (BlockFactory.previewWorkspace) {
@@ -164,10 +167,14 @@ BlockFactory.updatePreview = function() {
     }
     var rtl = newDir === 'rtl';
     BlockFactory.previewWorkspace = Blockly.inject('preview',
-        {rtl: rtl,
-         media: '../../media/',
-         scrollbars: true});
+        {
+          rtl: rtl,
+          theme: "dark",
+          media: 'media/',
+          scrollbars: true});
     BlockFactory.oldDir = newDir;
+
+    console.log('Preview workspace injected');
   }
   BlockFactory.previewWorkspace.clear();
 
@@ -223,7 +230,7 @@ BlockFactory.updatePreview = function() {
     previewBlock.setDeletable(false);
     previewBlock.moveBy(15, 10);
     BlockFactory.previewWorkspace.clearUndo();
-    BlockFactory.updateGenerator(previewBlock);
+    //BlockFactory.updateGenerator(previewBlock);
 
     // Warn user only if their block type is already exists in Blockly's
     // standard library.
@@ -262,6 +269,10 @@ BlockFactory.updatePreview = function() {
  * @throws If selector value is not recognized.
  */
 BlockFactory.getBlockDefinitionFormat = function() {
+  if(!document.getElementById('format')){
+    return 'JSON';
+  }
+
   switch (document.getElementById('format').value) {
     case 'JSON':
     case 'Manual-JSON':

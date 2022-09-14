@@ -1,0 +1,40 @@
+{
+  "type": "cpd",
+  "message0": "CPD %1 name %2 %3 description %4 %5 steps %6 scenarios %7",
+  "args0": [
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "field_input",
+      "name": "name",
+      "text": "CCBB"
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_input",
+      "name": "description",
+      "text": "description"
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "input_statement",
+      "name": "steps",
+      "check": "step"
+    },
+    {
+      "type": "input_statement",
+      "name": "scenarios",
+      "check": "scenario"
+    }
+  ],
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}

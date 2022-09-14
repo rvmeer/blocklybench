@@ -5,8 +5,8 @@
       {
         "type": "factory_base",
         "id": "~[3l7X0=OTJ-:75szaug",
-        "x": 30,
-        "y": 29,
+        "x": 89,
+        "y": 75,
         "extraState": "<mutation connections=\"NONE\"></mutation>",
         "fields": {
           "NAME": "step",
@@ -43,18 +43,31 @@
                             "fields": {
                               "TEXT": "name",
                               "FIELDNAME": "name"
-                            },
-                            "next": {
-                              "block": {
-                                "type": "field_static",
-                                "id": "e}H-O5.lWP@!v2Kv5vgM",
-                                "fields": {
-                                  "TEXT": "abc"
-                                }
-                              }
                             }
                           }
                         }
+                      }
+                    }
+                  }
+                }
+              },
+              "next": {
+                "block": {
+                  "type": "input_statement",
+                  "id": ":AfJwuCbrDeR%8MBGbJR",
+                  "fields": {
+                    "INPUTNAME": "NAME",
+                    "ALIGN": "LEFT"
+                  },
+                  "inputs": {
+                    "TYPE": {
+                      "shadow": {
+                        "type": "type_null",
+                        "id": "):oYrWW]SjeeE9)SnpgS"
+                      },
+                      "block": {
+                        "type": "type_boolean",
+                        "id": "3m`N(b|k3aTstKN)7ii-"
                       }
                     }
                   }
@@ -67,7 +80,7 @@
               "type": "text",
               "id": "l@#B|3p`(k;:rZQL7-te",
               "fields": {
-                "TEXT": ""
+                "TEXT": "Dit is mijn 1e blok"
               }
             }
           },
@@ -76,17 +89,17 @@
               "type": "text",
               "id": "`?`![)@-4jRMvBi1xQdp",
               "fields": {
-                "TEXT": ""
+                "TEXT": "help"
               }
             }
           },
           "COLOUR": {
             "block": {
               "type": "colour_hue",
-              "id": "i@2#O|Pj?E:yUW/%-*]K",
-              "extraState": "<mutation colour=\"#5b67a5\"></mutation>",
+              "id": "=D*$~bJAu^^*pBSI4rps",
+              "extraState": "<mutation colour=\"#5ba58c\"></mutation>",
               "fields": {
-                "HUE": 230
+                "HUE": 160
               }
             }
           }

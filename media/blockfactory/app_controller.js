@@ -17,27 +17,27 @@
  */
 AppController = function() {
   // Initialize Block Library
-  this.blockLibraryName = 'blockLibrary';
-  this.blockLibraryController =
-      new BlockLibraryController(this.blockLibraryName);
-  this.blockLibraryController.populateBlockLibrary();
+  //this.blockLibraryName = 'blockLibrary';
+  //this.blockLibraryController =
+  //    new BlockLibraryController(this.blockLibraryName);
+  //this.blockLibraryController.populateBlockLibrary();
 
   // Construct Workspace Factory Controller.
-  this.workspaceFactoryController = new WorkspaceFactoryController
-      ('workspacefactory_toolbox', 'toolbox_blocks', 'preview_blocks');
+  //this.workspaceFactoryController = new WorkspaceFactoryController
+  //    ('workspacefactory_toolbox', 'toolbox_blocks', 'preview_blocks');
 
   // Initialize Block Exporter
-  this.exporter =
-      new BlockExporterController(this.blockLibraryController.storage);
+  //this.exporter =
+  //    new BlockExporterController(this.blockLibraryController.storage);
 
   // Map of tab type to the div element for the tab.
   this.tabMap = Object.create(null);
-  this.tabMap[AppController.BLOCK_FACTORY] =
-      document.getElementById('blockFactory_tab');
-  this.tabMap[AppController.WORKSPACE_FACTORY] =
-      document.getElementById('workspaceFactory_tab');
-  this.tabMap[AppController.EXPORTER] =
-      document.getElementById('blocklibraryExporter_tab');
+  //this.tabMap[AppController.BLOCK_FACTORY] =
+  //    document.getElementById('blockFactory_tab');
+  //this.tabMap[AppController.WORKSPACE_FACTORY] =
+  //    document.getElementById('workspaceFactory_tab');
+  //this.tabMap[AppController.EXPORTER] =
+  //    document.getElementById('blocklibraryExporter_tab');
 
   // Last selected tab.
   this.lastSelectedTab = null;
@@ -355,7 +355,7 @@ AppController.prototype.styleTabs_ = function() {
  */
 AppController.prototype.assignExporterClickHandlers = function() {
   var self = this;
-  document.getElementById('button_setBlocks').addEventListener('click',
+  /* document.getElementById('button_setBlocks').addEventListener('click',
       function() {
         self.openModal('dropdownDiv_setBlocks');
       });
@@ -384,7 +384,7 @@ AppController.prototype.assignExporterClickHandlers = function() {
   document.getElementById('exporterSubmitButton').addEventListener('click',
       function() {
         self.exporter.export();
-      });
+      }); */
 };
 
 /**
@@ -394,38 +394,38 @@ AppController.prototype.assignExporterClickHandlers = function() {
 AppController.prototype.assignExporterChangeListeners = function() {
   var self = this;
 
-  var blockDefCheck = document.getElementById('blockDefCheck');
-  var genStubCheck = document.getElementById('genStubCheck');
+  // var blockDefCheck = document.getElementById('blockDefCheck');
+  // var genStubCheck = document.getElementById('genStubCheck');
 
-  // Select the block definitions and generator stubs on default.
-  blockDefCheck.checked = true;
-  genStubCheck.checked = true;
+  // // Select the block definitions and generator stubs on default.
+  // blockDefCheck.checked = true;
+  // genStubCheck.checked = true;
 
-  // Checking the block definitions checkbox displays preview of code to export.
-  document.getElementById('blockDefCheck').addEventListener('change',
-      function(e) {
-        self.ifCheckedEnable(blockDefCheck.checked,
-            ['blockDefs', 'blockDefSettings']);
-      });
+  // // Checking the block definitions checkbox displays preview of code to export.
+  // document.getElementById('blockDefCheck').addEventListener('change',
+  //     function(e) {
+  //       self.ifCheckedEnable(blockDefCheck.checked,
+  //           ['blockDefs', 'blockDefSettings']);
+  //     });
 
-  // Preview updates when user selects different block definition format.
-  document.getElementById('exportFormat').addEventListener('change',
-      function(e) {
-        self.exporter.updatePreview();
-      });
+  // // Preview updates when user selects different block definition format.
+  // document.getElementById('exportFormat').addEventListener('change',
+  //     function(e) {
+  //       self.exporter.updatePreview();
+  //     });
 
-  // Checking the generator stub checkbox displays preview of code to export.
-  document.getElementById('genStubCheck').addEventListener('change',
-      function(e) {
-        self.ifCheckedEnable(genStubCheck.checked,
-            ['genStubs', 'genStubSettings']);
-      });
+  // // Checking the generator stub checkbox displays preview of code to export.
+  // document.getElementById('genStubCheck').addEventListener('change',
+  //     function(e) {
+  //       self.ifCheckedEnable(genStubCheck.checked,
+  //           ['genStubs', 'genStubSettings']);
+  //     });
 
-  // Preview updates when user selects different generator stub language.
-  document.getElementById('exportLanguage').addEventListener('change',
-      function(e) {
-        self.exporter.updatePreview();
-      });
+  // // Preview updates when user selects different generator stub language.
+  // document.getElementById('exportLanguage').addEventListener('change',
+  //     function(e) {
+  //       self.exporter.updatePreview();
+  //     });
 };
 
 /**
@@ -455,30 +455,30 @@ AppController.prototype.ifCheckedEnable = function(enabled, idArray) {
 AppController.prototype.assignLibraryClickHandlers = function() {
   var self = this;
 
-  // Button for saving block to library.
-  document.getElementById('saveToBlockLibraryButton').addEventListener('click',
-      function() {
-        self.blockLibraryController.saveToBlockLibrary();
-      });
+  // // Button for saving block to library.
+  // document.getElementById('saveToBlockLibraryButton').addEventListener('click',
+  //     function() {
+  //       self.blockLibraryController.saveToBlockLibrary();
+  //     });
 
-  // Button for removing selected block from library.
-  document.getElementById('removeBlockFromLibraryButton').addEventListener(
-    'click',
-      function() {
-        self.blockLibraryController.removeFromBlockLibrary();
-      });
+  // // Button for removing selected block from library.
+  // document.getElementById('removeBlockFromLibraryButton').addEventListener(
+  //   'click',
+  //     function() {
+  //       self.blockLibraryController.removeFromBlockLibrary();
+  //     });
 
-  // Button for clearing the block library.
-  document.getElementById('clearBlockLibraryButton').addEventListener('click',
-      function() {
-        self.blockLibraryController.clearBlockLibrary();
-      });
+  // // Button for clearing the block library.
+  // document.getElementById('clearBlockLibraryButton').addEventListener('click',
+  //     function() {
+  //       self.blockLibraryController.clearBlockLibrary();
+  //     });
 
-  // Hide and show the block library dropdown.
-  document.getElementById('button_blockLib').addEventListener('click',
-      function() {
-        self.openModal('dropdownDiv_blockLib');
-      });
+  // // Hide and show the block library dropdown.
+  // document.getElementById('button_blockLib').addEventListener('click',
+  //     function() {
+  //       self.openModal('dropdownDiv_blockLib');
+  //     });
 };
 
 /**
@@ -487,47 +487,47 @@ AppController.prototype.assignLibraryClickHandlers = function() {
 AppController.prototype.assignBlockFactoryClickHandlers = function() {
   var self = this;
   // Assign button event handlers for Block Factory.
-  document.getElementById('localSaveButton')
-      .addEventListener('click', function() {
-        self.exportBlockLibraryToFile();
-      });
+  //document.getElementById('localSaveButton')
+  //    .addEventListener('click', function() {
+  //      self.exportBlockLibraryToFile();
+  //    });
 
-  document.getElementById('helpButton').addEventListener('click',
-      function() {
-        open('https://developers.google.com/blockly/custom-blocks/block-factory',
-             'BlockFactoryHelp');
-      });
+  //document.getElementById('helpButton').addEventListener('click',
+  //    function() {
+  //      open('https://developers.google.com/blockly/custom-blocks/block-factory',
+  //           'BlockFactoryHelp');
+  //    });
 
-  document.getElementById('files').addEventListener('change',
-      function() {
-        // Warn user.
-        var replace = confirm('This imported block library will ' +
-            'replace your current block library.');
-        if (replace) {
-          self.importBlockLibraryFromFile();
-          // Clear this so that the change event still fires even if the
-          // same file is chosen again. If the user re-imports a file, we
-          // want to reload the workspace with its contents.
-          this.value = null;
-        }
-      });
+  //document.getElementById('files').addEventListener('change',
+  //    function() {
+  //      // Warn user.
+  //      var replace = confirm('This imported block library will ' +
+  //          'replace your current block library.');
+  //      if (replace) {
+  //        self.importBlockLibraryFromFile();
+  //        // Clear this so that the change event still fires even if the
+  //        // same file is chosen again. If the user re-imports a file, we
+  //        // want to reload the workspace with its contents.
+  //        this.value = null;
+  //      }
+  //    });
 
-  document.getElementById('createNewBlockButton')
-    .addEventListener('click', function() {
-      // If there are unsaved changes warn user, check if they'd like to
-      // proceed with unsaved changes, and act accordingly.
-      var proceedWithUnsavedChanges =
-          self.blockLibraryController.warnIfUnsavedChanges();
-      if (!proceedWithUnsavedChanges) {
-        return;
-      }
+  //document.getElementById('createNewBlockButton')
+  //  .addEventListener('click', function() {
+  //    // If there are unsaved changes warn user, check if they'd like to
+  //    // proceed with unsaved changes, and act accordingly.
+  //    var proceedWithUnsavedChanges =
+  //        self.blockLibraryController.warnIfUnsavedChanges();
+  //    if (!proceedWithUnsavedChanges) {
+  //      return;
+  //    }
 
-      BlockFactory.showStarterBlock();
-      self.blockLibraryController.setNoneSelected();
+  //   BlockFactory.showStarterBlock();
+  //    self.blockLibraryController.setNoneSelected();
 
       // Close the Block Library Dropdown.
-      self.closeModal();
-    });
+  //     self.closeModal();
+  //  });
 };
 
 /**
@@ -543,21 +543,21 @@ AppController.prototype.addBlockFactoryEventListeners = function() {
   // Update the buttons on the screen based on whether
   // changes have been saved.
   var self = this;
-  BlockFactory.mainWorkspace.addChangeListener(function() {
-    self.blockLibraryController.updateButtons(FactoryUtils.savedBlockChanges(
-        self.blockLibraryController));
-    });
+  // BlockFactory.mainWorkspace.addChangeListener(function() {
+  //   self.blockLibraryController.updateButtons(FactoryUtils.savedBlockChanges(
+  //       self.blockLibraryController));
+  //   });
 
-  document.getElementById('direction')
-      .addEventListener('change', BlockFactory.updatePreview);
-  document.getElementById('languageTA')
-      .addEventListener('change', BlockFactory.manualEdit);
-  document.getElementById('languageTA')
-      .addEventListener('keyup', BlockFactory.manualEdit);
-  document.getElementById('format')
-      .addEventListener('change', BlockFactory.formatChange);
-  document.getElementById('language')
-      .addEventListener('change', BlockFactory.updatePreview);
+  //document.getElementById('direction')
+  //    .addEventListener('change', BlockFactory.updatePreview);
+  //document.getElementById('languageTA')
+  //    .addEventListener('change', BlockFactory.manualEdit);
+  //document.getElementById('languageTA')
+  //    .addEventListener('keyup', BlockFactory.manualEdit);
+  //document.getElementById('format')
+  //    .addEventListener('change', BlockFactory.formatChange);
+  //document.getElementById('language')
+  //    .addEventListener('change', BlockFactory.updatePreview);
 };
 
 /**
@@ -572,12 +572,12 @@ AppController.prototype.initializeBlocklyStorage = function() {
       'Sorry, "%1" doesn\'t correspond with any saved Blockly file.';
   BlocklyStorage.XML_ERROR = 'Could not load your saved file.\n' +
       'Perhaps it was created with a different version of Blockly?';
-  var linkButton = document.getElementById('linkButton');
-  linkButton.style.display = 'inline-block';
-  linkButton.addEventListener('click',
-      function() {
-          BlocklyStorage.link(BlockFactory.mainWorkspace);});
-  BlockFactory.disableEnableLink();
+  //var linkButton = document.getElementById('linkButton');
+  //linkButton.style.display = 'inline-block';
+  //linkButton.addEventListener('click',
+  //    function() {
+  //        BlocklyStorage.link(BlockFactory.mainWorkspace);});
+  //BlockFactory.disableEnableLink();
 };
 
 /**
@@ -587,13 +587,13 @@ AppController.prototype.onresize = function(event) {
   if (this.selectedTab === AppController.BLOCK_FACTORY) {
     // Handle resizing of Block Factory elements.
     var expandList = [
-      document.getElementById('blocklyPreviewContainer'),
+      //document.getElementById('blocklyPreviewContainer'),
       document.getElementById('blockly'),
-      document.getElementById('blocklyMask'),
-      document.getElementById('preview'),
-      document.getElementById('languagePre'),
-      document.getElementById('languageTA'),
-      document.getElementById('generatorPre'),
+      //document.getElementById('blocklyMask'),
+      //document.getElementById('preview'),
+      //document.getElementById('languagePre'),
+      //document.getElementById('languageTA'),
+      //document.getElementById('generatorPre'),
     ];
     for (var i = 0, expand; expand = expandList[i]; i++) {
       expand.style.width = (expand.parentNode.offsetWidth - 2) + 'px';
@@ -670,11 +670,12 @@ AppController.prototype.init = function() {
   this.assignExporterClickHandlers();
   this.assignLibraryClickHandlers();
   this.assignBlockFactoryClickHandlers();
+
   // Hide and show the block library dropdown.
-  document.getElementById('modalShadow').addEventListener('click',
-      function() {
-        self.closeModal();
-      });
+  //document.getElementById('modalShadow').addEventListener('click',
+  //    function() {
+  //      self.closeModal();
+  //    });
 
   this.onresize();
   window.addEventListener('resize', function() {
@@ -688,8 +689,10 @@ AppController.prototype.init = function() {
        toolbox: toolbox,
        comments: false,
        disable: false,
-       media: '../../media/',
-       theme: "dark"
+       // media: 'media/', defaults to ttps://blockly-demo.appspot.com/static/media/
+       theme: "dark",
+       sounds: false,
+       trashcan: false
       });
 
   // Add tab handlers for switching between Block Factory and Block Exporter.
@@ -711,5 +714,5 @@ AppController.prototype.init = function() {
   this.addBlockFactoryEventListeners();
 
   // Workspace Factory init.
-  WorkspaceFactoryInit.initWorkspaceFactory(this.workspaceFactoryController);
+  //WorkspaceFactoryInit.initWorkspaceFactory(this.workspaceFactoryController);
 };

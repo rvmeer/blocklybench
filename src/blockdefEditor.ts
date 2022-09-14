@@ -7,9 +7,13 @@ import { TextEncoder } from 'util';
 
 class BlockDefDocument extends Disposable implements vscode.CustomDocument{
 	public readonly uri: vscode.Uri;
-	public readonly svox_uri: vscode.Uri;
+	public readonly block_js_uri: vscode.Uri;
+	public readonly block_json_uri: vscode.Uri;
 	private _blocks: any;
-	private _code: string;
+	private _blockdefName: string;
+
+	private _js_code: string;
+	private _json_code: string;
 
 	private readonly _onDidChange = this._register(new vscode.EventEmitter<{
 		readonly label: string,
@@ -33,11 +37,15 @@ class BlockDefDocument extends Disposable implements vscode.CustomDocument{
 		super();
 		this.uri = uri;
 
-		const parsed_svox_uri: any = path.parse(this.uri.toString());
-		this.svox_uri = vscode.Uri.parse(`${parsed_svox_uri.dir}/${parsed_svox_uri.name}`); // without the JSON (so appel.svox)
+		const parsed_uri: any = path.parse(this.uri.toString());
+		this._blockdefName = parsed_uri.name.split('.')[0];
+		this.block_js_uri = vscode.Uri.parse(`${parsed_uri.dir}/${this._blockdefName}.block.js`);
+		this.block_json_uri = vscode.Uri.parse(`${parsed_uri.dir}/${this._blockdefName}.block.json`);
 
+		
 		this._blocks = blocks;
-		this._code = '';
+		this._js_code = '';
+		this._json_code = '';
 	}
 
 	public async write(){
@@ -45,8 +53,11 @@ class BlockDefDocument extends Disposable implements vscode.CustomDocument{
 		const contents = JSON.stringify(this.blocks, undefined, 2);
 		vscode.workspace.fs.writeFile(this.uri, new TextEncoder().encode(contents));
 
+		// Write the block.js file
+		vscode.workspace.fs.writeFile(this.block_js_uri, new TextEncoder().encode(this.js_code));
+
 		// Write the block.json file
-		//vscode.workspace.fs.writeFile(this.svox_uri, new TextEncoder().encode(this.code));
+		vscode.workspace.fs.writeFile(this.block_json_uri, new TextEncoder().encode(this.json_code));
 	}
 
 	public get blocks(): any {
@@ -68,11 +79,23 @@ class BlockDefDocument extends Disposable implements vscode.CustomDocument{
 		}
 	}
 
-	public get code(): string {
-		return this._code;
+	public get js_code(): string {
+		return this._js_code;
 	}
-	public set code(value: string) {
-		this._code = value;
+	public set js_code(value: string) {
+		this._js_code = value;
+	}
+
+	public get json_code(): string {
+		return this._json_code;
+	}
+
+	public set json_code(value: string) {
+		this._json_code = value;
+	}
+
+	public get blockdefName(): string {
+		return this._blockdefName;
 	}
 
     
@@ -205,10 +228,22 @@ export class BlockDefEditor implements vscode.CustomEditorProvider<BlockDefDocum
 										blocks: Blockly.serialization.workspaces.save(BlockFactory.mainWorkspace)
 									});
 			
-									//vscode.postMessage({
-									//	command: 'code',
-									//	code: Blockly.SVOX.workspaceToCode(BlockFactory.mainWorkspace)
-									//});
+									vscode.postMessage({
+										command: 'code',
+										code: {
+											js: FactoryUtils.getBlockDefinition(message.blockdefName, FactoryUtils.getRootBlock(Blockly.mainWorkspace), "JavaScript",
+												BlockFactory.mainWorkspace),
+											json: FactoryUtils.getBlockDefinition(message.blockdefName, FactoryUtils.getRootBlock(Blockly.mainWorkspace), "JSON",
+												BlockFactory.mainWorkspace)
+
+										}
+									});
+
+									document.getElementById('languageTA').value = FactoryUtils.getBlockDefinition(message.blockdefName, 
+										FactoryUtils.getRootBlock(Blockly.mainWorkspace), "JSON",
+										BlockFactory.mainWorkspace);
+
+									BlockFactory.updatePreview();
 								});
 							break;
 						}
@@ -224,366 +259,28 @@ export class BlockDefEditor implements vscode.CustomEditorProvider<BlockDefDocum
 		  </script>
 		</head>
 		<body>
-		  <h1><a href="https://developers.google.com/blockly/">Blockly</a> &gt;
-			<a href="../index.html">Demos</a> &gt; Blockly Developer Tools
-			<button id="helpButton" title="View documentation in new window.">
-			  <span>Help</span>
-			</button>
-			<button class="privacyButton" title="Open Google privacy policy"><a class="privacyLink" href="https://policies.google.com/privacy">Privacy</a>
-			</button>
-		  </h1>
-		  <div id="tabContainer">
-			<div id="blockFactory_tab" class="tab tabon">Block Factory</div>
-			<div id="blocklibraryExporter_tab" class="tab taboff">Block Exporter</div>
-			<div id="workspaceFactory_tab" class="tab taboff">Workspace Factory</div>
-		  </div>
-		
-		  <!-- Exporter tab -->
-		  <div id="blockLibraryExporter">
-			<br>
-			<p>
-			  First, select blocks from your block library by clicking on them. Then, use the Export Settings form to download starter code for selected blocks.
-			</p>
-			<div id="exportSelector">
-			  <br>
-			  <h3>Block Selector</h3>
-			  <div class="dropdown">
-				<button id="button_setBlocks">Select</button>
-				<div id="dropdownDiv_setBlocks" class="dropdown-content">
-				  <a id="dropdown_addAllFromLib" title="Select all block library blocks.">All Stored in Block Library</a>
-				  <a id="dropdown_addAllUsed" title="Select all block library blocks used in workspace factory.">All Used in Workspace Factory</a>
-				</div>
-				<button id="clearSelectedButton" title="Clear selected blocks.">Clear Selected</button>
-			  </div>
-		
-			  <div id="blockSelector"></div>
-			</div>
-		
-			<!-- Users may customize export settings through this form -->
-			<div id="exportSettings">
-			  <br>
-			  <h3> Export Settings </h3>
-			  <form id="exportSettingsForm">
-		
-				<div id="selectedBlocksTextContainer">
-				  <p>Currently Selected:</p>
-				  <p id="selectedBlocksText"></p>
-				</div>
-				<label><input type="checkbox" id="blockDefCheck">Block Definition(s)</label><br>
-				<div id="blockDefSettings" class="subsettings">
-				  <label>Format:
-				  <select id="exportFormat">
-					<option value="JSON">JSON</option>
-					<option value="JavaScript">JavaScript</option>
-				  </select></label>
-				  <br>
-				  <label>File Name:<br>
-				  <input type="text" id="blockDef_filename"></label>
-				</div>
-				<br>
-		
-				<label><input type="checkbox" id="genStubCheck">Generator Stub(s)</label><br>
-				<div id="genStubSettings" class="subsettings">
-				  <label>Language:
-				  <select id="exportLanguage">
-					<option value="JavaScript">JavaScript</option>
-					<option value="Python">Python</option>
-					<option value="PHP">PHP</option>
-					<option value="Lua">Lua</option>
-					<option value="Dart">Dart</option>
-				  </select></label>
-				  <br>
-				  <label>File Name:<br>
-				  <input type="text" id="generatorStub_filename"></label><br>
-				</div>
-				<br>
-			  </form>
-			  <button id="exporterSubmitButton" title="Download block starter code as specified in export settings.">Export</button>
-			</div>
-			<div id="exportPreview">
-			  <br>
-			  <h3>Export Preview</h3>
-			  <div id="blockDefs" class="exportPreviewTextArea">
-				<p id="blockDefs_label">Block Definitions:</p>
-				<pre id="blockDefs_textArea" class="prettyprint lang-js"></pre>
-			  </div>
-			  <div id="genStubs" class="exportPreviewTextArea">
-				<p id="genStubs_label">Generator Stubs:</p>
-				<pre id="genStubs_textArea" class="prettyprint lang-js"></pre>
-			  </div>
-			</div>
-		  </div>
-		
-		  <!-- Workspace Factory tab -->
-		
-		  <div id="workspaceFactoryContent">
-			<div id="factoryHeader">
-			  <p>
-				<div class="dropdown">
-				<button id="button_importBlocks">Import Custom Blocks</button>
-				  <div id="dropdownDiv_importBlocks" class="dropdown-content">
-					<input type="file" id="input_importBlocksJson" accept=".js, .json, .txt" class="inputfile">
-					<label for="input_importBlocksJson">From JSON</label>
-					<input type="file" id="input_importBlocksJs" accept=".js, .txt" class="inputfile">
-					<label for="input_importBlocksJs">From Javascript</label>
-				  </div>
-				</div>
-		
-				<div class="dropdown">
-				<button id="button_load">Load to Edit</button>
-				  <div id="dropdownDiv_load" class="dropdown-content">
-					<input type="file" id="input_loadToolbox" accept=".xml" class="inputfile">
-					<label for="input_loadToolbox">Toolbox</label>
-					<input type="file" id="input_loadPreload" accept=".xml" class="inputfile">
-					<label for="input_loadPreload">Workspace Blocks</label>
-				  </div>
-				</div>
-		
-				<div class="dropdown">
-				<button id="button_export">Export</button>
-				  <div id="dropdownDiv_export" class="dropdown-content">
-					<a id="dropdown_exportOptions">Starter Code</a>
-					<a id="dropdown_exportToolbox">Toolbox</a>
-					<a id="dropdown_exportPreload">Workspace Blocks</a>
-					<a id="dropdown_exportAll">All</a>
-				  </div>
-				</div>
-		
-				<button id="button_clear">Clear</button>
-			  </p>
-			</div>
-		
-			<section id="createDiv">
-			  <div id="createHeader">
-				<h3>Edit</h3>
-				<p id="editHelpText">Drag blocks into the workspace to configure the toolbox in your custom workspace.</p>
-			  </div>
-			  <table id="workspaceTabs" style="width:auto; height:auto">
-				<tr>
-				  <td id="tab_toolbox" class="tabon">Toolbox</td>
-				  <td id="tab_preload" class="taboff">Workspace</td>
-				</tr>
-			  </table>
-			  <section id="toolbox_section">
-				<div id="toolbox_blocks"></div>
-			  </section>
-			  <aside id="toolbox_div">
-				<p id="categoryHeader">You currently have no categories.</p>
-				<table id="categoryTable" style="width:auto; height:auto">
-				</table>
-				<p>&nbsp;</p>
-		
-				<div class="dropdown">
-				  <button id="button_add" class="large">+</button>
-				  <div id="dropdownDiv_add" class="dropdown-content">
-					<a id="dropdown_newCategory">New Category</a>
-					<a id="dropdown_loadCategory">Standard Category</a>
-					<a id="dropdown_separator">Separator</a>
-					<a id="dropdown_loadStandardToolbox">Standard Toolbox</a>
-				  </div>
-				</div>
-		
-				<button id="button_remove" class="large">-</button>
-		
-				<button id="button_up" class="large">&#8593;</button>
-				<button id="button_down" class="large">&#8595;</button>
-		
-				<br>
-				<div class="dropdown">
-				  <button id="button_editCategory">Edit Category...</button>
-				  <div id="dropdownDiv_editCategory" class="dropdown-content">
-					<input id="categoryName">
-					<input id="categoryColour" value="000000">
-					<button id="categorySave">Save</button>
-				  </div>
-				</div>
-		
-			  </aside>
-		
-			  <button id="button_addShadow" style="display: none">Make Shadow</button>
-			  <button id="button_removeShadow" style="display: none">Remove Shadow</button>
-		
-			  <aside id="preload_div" style="display:none">
-				<div id="preloadHelp">
-				  <p>Configure the options for your Blockly inject call.</p>
-				  <button id="button_optionsHelp">Help</button>
-				  <button class="small" id="button_standardOptions">Reset to Default</button>
-				</div>
-				<div id="workspace_options">
-				  <label><input type="checkbox" id="option_readOnly_checkbox">Read Only</label><br>
-				  <label><input type="checkbox" id="option_grid_checkbox">Use Grid</label><br>
-				  <div id="grid_options" style="display: none">
-					<label>Spacing <input type="number" id="gridOption_spacing_number" style="width: 3em"></label><br>
-					<label>Length <input type="number" id="gridOption_length_number" style="width: 3em"></label><br>
-					<label>Colour <input type="text" id="gridOption_colour_text" style="width: 8em"></label><br>
-					<div id="readonly1">
-					  <label><input type="checkbox" id="gridOption_snap_checkbox">Snap</label><br>
-					</div>
-				  </div>
-				  <label>Path to Blockly Media <input type="text" id="option_media_text" style="width: 90%"></label><br>
-				  <label><input type="checkbox" id="option_rtl_checkbox">Layout with RTL</label><br>
-				  <label><input type="checkbox" id="option_scrollbars_checkbox">Scrollbars</label><br>
-				  <label><input type="checkbox" id="option_zoom_checkbox">Zoom</label><br>
-				  <div id="zoom_options" style="display: none">
-					<label><input type="checkbox" id="zoomOption_controls_checkbox">Zoom Controls</label><br>
-					<label><input type="checkbox" id="zoomOption_wheel_checkbox">Zoom Wheel</label><br>
-					<label>Start Scale <input type="number" id="zoomOption_startScale_number" style="width: 4em"></label><br>
-					<label>Max Scale <input type="number" id="zoomOption_maxScale_number" style="width: 4em"></label><br>
-					<label>Min Scale <input type="number" id="zoomOption_minScale_number" style="width: 4em"></label><br>
-					<label>Scale Speed <input type="number" id="zoomOption_scaleSpeed_number" style="width: 4em"></label><br>
-				  </div>
-				  <label><input type="checkbox" id="option_css_checkbox">Use Blockly CSS</label><br>
-				  <div id="readonly2">
-					<label><input type="checkbox" id="option_collapse_checkbox">Collapsible Blocks</label><br>
-					<label><input type="checkbox" id="option_comments_checkbox">Comments for Blocks</label><br>
-					<label><input type="checkbox" id="option_disable_checkbox">Disabled Blocks</label><br>
-					<label><input type="checkbox" id="option_infiniteBlocks_checkbox">Infinite Blocks</label><br>
-					<div id="maxBlockNumber_option" style="display: none">
-					  <label>Max Blocks <input type="number" id="option_maxBlocks_number" style="width: 5em"></label><br>
-					</div>
-					<label><input type="checkbox" id="option_horizontalLayout_checkbox">Horizontal Toolbox</label><br>
-					<label><input type="checkbox" id="option_toolboxPosition_checkbox">Toolbox End</label><br>
-					<label><input type="checkbox" id="option_oneBasedIndex_checkbox">One-based index</label><br>
-					<label><input type="checkbox" id="option_sounds_checkbox">Sounds<br>
-					<label><input type="checkbox" id="option_trashcan_checkbox">Trashcan</label><br>
-				  </div>
-				</div>
-			  </aside>
-		
-			</section>
-		
-			<aside id="previewDiv">
-			  <div id="previewBorder">
-				<div id="previewHelp">
-				  <h3>Preview</h3>
-				  <p>This is what your custom workspace will look like.</p>
-				</div>
-				<div id="preview_blocks" class="content"></div>
-			  </div>
-			</aside>
-		  </div>
+		  
+		 
 		
 		  <!-- Blockly Factory Tab -->
 		  <table id="blockFactoryContent">
-			<tr width="100%" height="10%">
-			  <td width="50%" height="5%">
-				<table>
-				  <tr id="blockLibrary">
-					<td id="blockLibraryContainer">
-					<span>
-					  <div class="dropdown">
-						<button id="button_blockLib">Block Library</button>
-						<div id="dropdownDiv_blockLib" class="dropdown-content">
-						  <a id="createNewBlockButton">Create New Block</a>
-						</div>
-					  </div>
-					  <select id="blockLibraryDropdown" style="display:none">
-					  </select>
-					</span>
-					</td>
-					<td id="blockLibraryControls">
-					<button id="saveToBlockLibraryButton" title="Save block to Block Library.">
-					  Save "block_type"
-					</button>
-					<button id="removeBlockFromLibraryButton" title="Remove block from Block Library.">
-					  Delete "block_type"
-					</button>
-					</td>
-				  </tr>
-				</table>
-			  </td>
-			  <td height="5%">
-				<table id="blockFactoryPreview">
-				  <tr>
-					<td id="previewContainer">
-					  <h3>Preview:
-						<select id="direction">
-						  <option value="ltr">LTR</option>
-						  <option value="rtl">RTL</option>
-						</select>
-					  </h3>
-					</td>
-					<td id="buttonContainer">
-					  <button id="linkButton" title="Save and link to blocks.">
-						<img src="link.png" height="21" width="21">
-					  </button>
-					  <button id="clearBlockLibraryButton" title="Clear Block Library.">
-						<span>Clear Library</span>
-					  </button>
-					  <label for="files" class="buttonStyle">
-						<span class=>Import Block Library</span>
-					  </label>
-					  <input id="files" type="file" name="files"
-						  accept="application/xml">
-					  <button id="localSaveButton" title="Save block library XML to a local file.">
-						<span>Download Block Library</span>
-					  </button>
-					</td>
-				  </tr>
-				</table>
-			  </td>
-			</tr>
-			<tr height="80%">
-			  <td id="blocklyWorkspaceContainer">
+			<tr height="95%">
+			  <td id="blocklyWorkspaceContainer" style="width: 70%;">
 				<div id="blockly"></div>
 				<div id="blocklyMask"></div>
 			  </td>
-			  <td width="50%">
-				<table id="blocklyPreviewContainer">
-				  <tr>
-					<td height="30%">
-					  <div id="preview"></div>
-					</td>
-				  </tr>
-				  <tr>
-					<td height="5%">
-					  <h3>Block Definition:
-						<!-- TODO(#1268): Separate concerns of format and editable.
-						  -               Add "Editable" state toggle button? -->
-						<select id="format">
-						  <option value="JSON">JSON</option>
-						  <option value="JavaScript">JavaScript</option>
-						  <option value="Manual-JSON">Manual JSON&hellip;</option>
-						  <script>
-							// Manual JavaScript works but requires use of eval().
-							// TODO(#1269): Replace eval() with JS-Interpreter before
-							//              re-enabling "Manual JavaScript" mode.
-							if (document.location.href.indexOf('file://') === 0) {
-							  document.write(
-								  '<option value="Manual-JS">Manual JavaScript&hellip;</option>');
-							}
-						  </script>
-						</select>
-					  </h3>
-					</td>
-				  </tr>
-				  <tr>
-					<td height="30%">
-					  <pre id="languagePre" class="prettyprint lang-js"></pre>
-					  <textarea id="languageTA"></textarea>
-					</td>
-				  </tr>
-				  <tr>
-					<td height="5%">
-					  <h3>Generator stub:
-						<select id="language">
-						  <option value="JavaScript">JavaScript</option>
-						  <option value="Python">Python</option>
-						  <option value="PHP">PHP</option>
-						  <option value="Lua">Lua</option>
-						  <option value="Dart">Dart</option>
-						</select>
-					  </h3>
-					</td>
-				  </tr>
-				  <tr>
-					<td height="30%">
-					  <pre id="generatorPre" class="prettyprint lang-js"></pre>
-					</td>
-				  </tr>
-				</table>
+			  <td>
+			  		<div id="preview" style="background-color: black; height: 100%;"></div>
+
+					<!-- Needed for the preview, see BlockFactory.updatePreview() -->
+					<textarea id="format" style="display: none">JSON</textarea>
+					<textarea id="languageTA" style="display: None"></textarea>
+					<select id="direction" style="display: none">
+						<option value="ltr" selected="selected">LTR</option>
+						<option value="rtl">RTL</option>
+					</select>
 			  </td>
-			  </tr>
+			</tr>
 		  </table>
 		
 		  <div id="modalShadow"></div>
@@ -945,7 +642,11 @@ export class BlockDefEditor implements vscode.CustomEditorProvider<BlockDefDocum
 			switch (message.command) {
 				case 'loaded': {
 					if (message.loaded) {
-						panel.webview.postMessage({command: 'blocks', blocks: document.blocks});
+						panel.webview.postMessage({
+							command: 'blocks', 
+							blocks: document.blocks,
+							blockdefName: document.blockdefName,
+						});
 					}
 					break;
 				}
@@ -954,7 +655,8 @@ export class BlockDefEditor implements vscode.CustomEditorProvider<BlockDefDocum
 					break;
 				}
 				case 'code': {
-					document.code = message.code;
+					document.js_code = message.code.js;
+					document.json_code = message.code.json;
 					break;
 				}
 				default:
