@@ -1,0 +1,62 @@
+{
+	"name": "cat-coding",
+	"description": "Cat Coding - A Webview API Sample",
+	"version": "0.0.1",
+	"publisher": "vscode-samples",
+	"engines": {
+		"vscode": "^1.38.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:blocklybench.start",
+		"onCustomEditor:blocklybench.blockdefEditor"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/rvmeer/blocklybench.git"
+	},
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "blocklybench.start",
+				"title": "Start blocklybench"
+			}
+		],
+		
+
+
+
+		"customEditors": [
+			{
+				"viewType": "blocklybench.blockdefEditor",
+				"displayName": "Block definition editor",
+				"selector": [
+					{
+						"filenamePattern": "*.blockdef.json"
+					}
+				]
+			}
+		]
+
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint . --ext .ts,.tsx",
+		"watch": "tsc -w -p ./"
+	},
+	"dependencies": {
+		"vscode-uri": "^3.0.3"
+	},
+	"devDependencies": {
+		"@types/node": "^12.12.0",
+		"@typescript-eslint/eslint-plugin": "^3.0.2",
+		"@typescript-eslint/parser": "^3.0.2",
+		"eslint": "^7.1.0",
+		"typescript": "^3.9.4",
+		"@types/vscode": "^1.46.0"
+	}
+}
