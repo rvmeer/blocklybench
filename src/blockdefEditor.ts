@@ -45,8 +45,8 @@ class BlockDefDocument extends Disposable implements vscode.CustomDocument{
 		const contents = JSON.stringify(this.blocks, undefined, 2);
 		vscode.workspace.fs.writeFile(this.uri, new TextEncoder().encode(contents));
 
-		// Write the svox file
-		vscode.workspace.fs.writeFile(this.svox_uri, new TextEncoder().encode(this.code));
+		// Write the block.json file
+		//vscode.workspace.fs.writeFile(this.svox_uri, new TextEncoder().encode(this.code));
 	}
 
 	public get blocks(): any {
@@ -91,7 +91,7 @@ export class BlockDefEditor implements vscode.CustomEditorProvider<BlockDefDocum
 				webviewOptions: {
 					retainContextWhenHidden: true,
 				},
-				supportsMultipleEditorsPerDocument: false,
+				supportsMultipleEditorsPerDocument: false
 			});
 	}
 
@@ -120,6 +120,8 @@ export class BlockDefEditor implements vscode.CustomEditorProvider<BlockDefDocum
 
 		return BlockDefDocument.read(uri);
 	}
+
+
 
 	resolveCustomEditor(document: BlockDefDocument, panel: vscode.WebviewPanel, token: vscode.CancellationToken): void | Thenable<void> {		
 		panel.webview.options = {
@@ -181,15 +183,44 @@ export class BlockDefEditor implements vscode.CustomEditorProvider<BlockDefDocum
 		  <link rel="stylesheet" href="${panel.webview.asWebviewUri(vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'blockfactory', 'cp.css')))}">
 		  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 		  <script>
-			var blocklyFactory;
-			var init = function() {
-			  BlocklyDevTools.Analytics.init();
+			    const vscode = acquireVsCodeApi();
+
+				var blocklyFactory;
+				var init = function() {
+			  		BlocklyDevTools.Analytics.init();
 		
-			  blocklyFactory = new AppController();
-			  blocklyFactory.init();
-			  window.addEventListener('beforeunload', blocklyFactory.confirmLeavePage);
-			};
-			window.addEventListener('load', init);
+			  		blocklyFactory = new AppController();
+			  		blocklyFactory.init();
+			  		window.addEventListener('beforeunload', blocklyFactory.confirmLeavePage);
+
+					window.addEventListener('message', event => {
+						const message = event.data;
+						switch (message.command) {
+							case 'blocks':
+								Blockly.serialization.workspaces.load(message.blocks, BlockFactory.mainWorkspace);
+
+								BlockFactory.mainWorkspace.addChangeListener((event) => {
+									vscode.postMessage({
+										command: 'blocks',
+										blocks: Blockly.serialization.workspaces.save(BlockFactory.mainWorkspace)
+									});
+			
+									//vscode.postMessage({
+									//	command: 'code',
+									//	code: Blockly.SVOX.workspaceToCode(BlockFactory.mainWorkspace)
+									//});
+								});
+							break;
+						}
+					});
+
+					vscode.postMessage({
+						command: 'loaded',
+						loaded: true
+					});
+				};
+
+				window.addEventListener('load', init);
 		  </script>
 		</head>
 		<body>
@@ -930,14 +961,6 @@ export class BlockDefEditor implements vscode.CustomEditorProvider<BlockDefDocum
 					break;
 			}
 		}, null);
-		
-		document.onDidChange(e => {
-			// Tell VS Code that the document has been edited by the use.
-			this._onDidChangeCustomDocument.fire({
-				document,
-				...e,
-			});
-		});
 	}
 	
 }

@@ -9,7 +9,7 @@
         "y": 29,
         "extraState": "<mutation connections=\"NONE\"></mutation>",
         "fields": {
-          "NAME": "step",
+          "NAME": "step2",
           "INLINE": "AUTO",
           "CONNECTIONS": "NONE"
         },
@@ -55,6 +55,24 @@
                             }
                           }
                         }
+                      }
+                    }
+                  }
+                }
+              },
+              "next": {
+                "block": {
+                  "type": "input_statement",
+                  "id": "6W~3.aCewDVwd7p?1S?#",
+                  "fields": {
+                    "INPUTNAME": "NAME",
+                    "ALIGN": "LEFT"
+                  },
+                  "inputs": {
+                    "TYPE": {
+                      "shadow": {
+                        "type": "type_null",
+                        "id": "hY.C%/X,TQ3of4pJxU$_"
                       }
                     }
                   }

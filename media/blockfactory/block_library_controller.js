@@ -70,7 +70,7 @@ BlockLibraryController.prototype.openBlock = function(blockType) {
     Blockly.Xml.domToWorkspace(xml, BlockFactory.mainWorkspace);
     BlockFactory.mainWorkspace.clearUndo();
   } else {
-    BlockFactory.showStarterBlock();
+    //BlockFactory.showStarterBlock();
     this.view.setSelectedBlockType(null);
   }
 };
