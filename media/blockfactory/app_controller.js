@@ -702,13 +702,13 @@ AppController.prototype.init = function() {
   this.assignExporterChangeListeners();
 
   // Create the root block on Block Factory main workspace.
-  if ('BlocklyStorage' in window && window.location.hash.length > 1) {
-    BlocklyStorage.retrieveXml(window.location.hash.substring(1),
-                               BlockFactory.mainWorkspace);
-  } else {
-    BlockFactory.showStarterBlock();
-  }
-  BlockFactory.mainWorkspace.clearUndo();
+  // if ('BlocklyStorage' in window && window.location.hash.length > 1) {
+  //   BlocklyStorage.retrieveXml(window.location.hash.substring(1),
+  //                              BlockFactory.mainWorkspace);
+  // } else {
+  //   BlockFactory.showStarterBlock();
+  // }
+  // BlockFactory.mainWorkspace.clearUndo();
 
   // Add Block Factory event listeners.
   this.addBlockFactoryEventListeners();
