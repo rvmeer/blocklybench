@@ -11,7 +11,8 @@
 	],
 	"activationEvents": [
 		"onCommand:blocklybench.start",
-		"onCustomEditor:blocklybench.blockdefEditor"
+		"onCustomEditor:blocklybench.blockdefEditor",
+		"onCustomEditor:blocklybench.ToolboxEditor"
 	],
 	"repository": {
 		"type": "git",
@@ -30,6 +31,15 @@
 
 
 		"customEditors": [
+			{
+				"viewType": "blocklybench.ToolboxEditor",
+				"displayName": "Blockly toolbox editor",
+				"selector": [
+					{
+						"filenamePattern": "toolbox.json"
+					}
+				]
+			},
 			{
 				"viewType": "blocklybench.blockdefEditor",
 				"displayName": "Block definition editor",

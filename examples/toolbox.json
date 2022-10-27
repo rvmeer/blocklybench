@@ -1,0 +1,20 @@
+{
+    "kind": "categoryToolbox",
+    "contents": [
+     {
+      "kind": "category",
+      "name" : "basic",
+      "colour": "#36f",
+      "contents": [
+       {
+         "kind": "block",
+         "type": "cpd"
+       },
+       {
+         "kind": "block",
+         "type": "step"
+       }
+      ]
+     }
+    ]
+   }

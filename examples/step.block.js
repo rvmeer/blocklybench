@@ -6,6 +6,8 @@ Blockly.Blocks['step'] = {
         .appendField(new Blockly.FieldTextInput("name"), "name");
     this.appendStatementInput("NAME")
         .setCheck("Boolean");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
     this.setColour(160);
  this.setTooltip("Dit is mijn 1e blok");
  this.setHelpUrl("help");

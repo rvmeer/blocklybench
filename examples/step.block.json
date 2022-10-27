@@ -16,6 +16,8 @@
       "check": "Boolean"
     }
   ],
+  "previousStatement": null,
+  "nextStatement": null,
   "colour": 160,
   "tooltip": "Dit is mijn 1e blok",
   "helpUrl": "help"

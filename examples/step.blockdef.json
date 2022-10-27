@@ -7,11 +7,11 @@
         "id": "~[3l7X0=OTJ-:75szaug",
         "x": 89,
         "y": 75,
-        "extraState": "<mutation connections=\"NONE\"></mutation>",
+        "extraState": "<mutation connections=\"BOTH\"></mutation>",
         "fields": {
           "NAME": "step",
           "INLINE": "AUTO",
-          "CONNECTIONS": "NONE"
+          "CONNECTIONS": "BOTH"
         },
         "inputs": {
           "INPUTS": {
@@ -91,6 +91,18 @@
               "fields": {
                 "TEXT": "help"
               }
+            }
+          },
+          "TOPTYPE": {
+            "shadow": {
+              "type": "type_null",
+              "id": "qQNyO;uyD`jWh;*c:vYr"
+            }
+          },
+          "BOTTOMTYPE": {
+            "shadow": {
+              "type": "type_null",
+              "id": "k7jp+_9oK:hux8O~zW%D"
             }
           },
           "COLOUR": {

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import {BlockDefEditor} from './blockdefEditor';
+import {ToolboxEditor} from './toolboxEditor';
 
 
 
@@ -11,6 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(BlockDefEditor.register(context));
+	context.subscriptions.push(ToolboxEditor.register(context));
 }
 
 
